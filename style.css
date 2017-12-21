@@ -1,0 +1,23 @@
+.animate-enter, 
+.animate-leave
+{ 
+	-webkit-transition: #time# #easing# all;
+	-moz-transition: #time# #easing# all;
+	-ms-transition: #time# #easing# all;
+	-o-transition: #time# #easing# all;
+	transition: #time# #easing# all;
+} 
+
+.animate-enter {
+	#positionEnter#;
+}
+.animate-enter.animate-enter-active {
+	#positionFinal#;
+}
+
+.animate-leave {
+	#positionFinal#;
+}
+.animate-leave.animate-leave-active{
+	#positionLeave#;
+}

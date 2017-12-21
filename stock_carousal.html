@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+ <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+ <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <script type="text/javascript" src="time-zone.js"></script> 
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>-->
+
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-route.js"></script>
+      <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-animate.min.js"></script>
+      <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-aria.min.js"></script>
+      <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-messages.min.js"></script>
+     <script src = "https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.5/angular-material.min.js"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.5/angular-material.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular-messages.min.js"></script>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>-->
+ <script src="https://momentjs.com/downloads/moment.js"></script>
+ <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+ <script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+ <script src="https://momentjs.com/downloads/moment-timezone-with-data-2012-2022.js"></script>
+ 
+ <script type="text/javascript" src="controllers.js"></script>
+  <title>Stock Market Analysis</title>
+  <style type="text/css">
+ md-autocomplete  md-autocomplete-wrap  md-progress-linear{
+ 	display: none;
+ } 	
+ md-autocomplete input:not(.md-input) {
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px #D6F0FC;
+}
+.table td.text span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+.animate-hidden {
+	-moz-transition: all linear 0.45s;
+	-ms-transition: all linear 0.45s;
+	-o-transition: all linear 0.45s;
+	position: absolute;
+	overflow: hidden;
+	-webkit-transition: all linear 0.45s;
+	transition: all linear 0.45s;
+	}
+.animate-hidden.ng-hide{
+	opacity:100;
+	transform: translate(-100%);
+}	
+.animate-hidden_new {
+	-moz-transition: all linear 0.45s;
+	-ms-transition: all linear 0.45s;
+	-o-transition: all linear 0.45s;
+	position: absolute;
+	overflow: hidden;
+	-webkit-transition: all linear 0.45s;
+	transition: all linear 0.45s;
+	}
+.animate-hidden_new.ng-hide{
+	opacity:100;
+	transform: translate(100%);
+}	
+  </style>
+</head>
+<body ng-app="stockTable" ng-controller="stockTableController" style='background-image:url("http://cs-server.usc.edu:45678/hw/hw8/images/background.png");'>
+<div class="container" style='background-image:url("http://cs-server.usc.edu:45678/hw/hw8/images/background.png");'>
+	<div class="container page-header" style="padding-top: 15px; margin-top:0px">
+		<div>
+			<div class="jumbotron" style="padding-left: 20px;background-color: white;padding-top: 35px">
+				<h4 style="text-align: center;"><b/>Stock Market Search</h4>
+				<form class="form-horizontal" id="stock_form" name="stock_form">
+					<!--<div class="form-group">-->
+					<div class="row">
+			  			<label class="control-label col-sm-3" style="text-align: left" for="symbol">Enter stock ticker symbol:<span style="color: red">*</span></label>
+			  			<!--<div class="col-sm-6">
+			    			<input type="text" class="form-control" id="stockSymbol" placeholder="e.g.AAPL" name="stockSymbol" ng-model="symbol">
+			  			</div>-->
+			  			<div class="col-sm-6" ng-cloak>
+					           <md-autocomplete flex required md-input-name="mandatoryInput" name="mandatoryInput" ng-model="mydata"
+						            md-selected-item="selectedItem" md-search-text="searchText" md-items="item in query(searchText)"
+						            ng-style="{border: stock_form.mandatoryInput.$touched && stock_form.mandatoryInput.$invalid ? '2px solid red' : 'none','box-shadow' : stock_form.mandatoryInput.$touched && stock_form.mandatoryInput.$invalid ? '0px 0px 6px red' : 'none' }"
+						            ng-keyup="key_up(searchText)" md-clear-button="false" placeholder="e.g AAPL" md-item-text="item | split:'-':0">
+						             <md-item-template>
+						                  <span md-highlight-text="searchText">{{item}}</span>
+
+						               </md-item-template>
+						               <md-not-found>No matches found</md-not-found>
+						              <!-- <ng-messages for="stock_form.name.$error">
+	        							<ng-message when="required">Too small!</ng-message>-->
+						        </md-autocomplete>         
+						        <br>
+						         <div ng-messages="stock_form.mandatoryInput.$touched && stock_form.mandatoryInput.$error" class="md-block">
+						                  <div ng-message="required" style="color: red">Please enter a stock symbol</div>
+						         </div>
+	            		</div>
+			  			<div class="col-sm-3">
+			  				<button type="button" class="btn btn-primary" ng-click="table_controller(selectedItem)" id="submit_btn" disabled><span class="glyphicon glyphicon-search"></span> Get Quote</button>
+			  				<button type="button" class="btn btn-default" ng-click="clear()"> <span class="glyphicon glyphicon-refresh"></span> Clear</button>
+			  			</div>
+			  		</div>	
+					<!--</div>-->
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+					<div id="cont1" class="container animate-hidden" ng-animate="'animate'" ng-hide="checked_con1" style="padding-left: 0px;padding-right: 30px;">
+							<div class="jumbotron" style="background-color: white;padding-top: 20px;padding-left: 20px;padding-bottom: 35px;padding-right: 20px;">
+									<div class="well well-sm" style="margin-bottom: 0">
+										<div class="row">
+											<div class="col-xs-3">
+											<br>
+												Favorite List
+											</div>
+											<div class="col-xs-2 col-md-5"></div>
+											<div class="col-xs-7 col-md-4">
+												<label style="text-align: left">Automatic Refresh:</label>
+							    					<input id="toggle_btn" type="checkbox" data-toggle="toggle">
+													<button type="button" class="btn btn-default" style="display: inline-block;" ng-click="simpleRefresh()"> <span class="glyphicon glyphicon-refresh"></span></button>
+													<button type="button" class="btn" disabled id="item1" ng-click="go_to_tab2()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+											</div>		
+										</div>
+									</div>	
+									<div style="border: 1px solid lightgrey;margin: 0px;padding-left: 0px">
+												<div class="col-sm-4 col-xs-12">
+													<label class="control-label" style="text-align: left">Sort by </label>
+														<select class="selectpicker" ng-model="ListBy" ng-change="enable()">
+														  <option value="">Default</option>
+														  <option value="symbol">Symbol</option>
+														  <option value="price">Price</option>
+														  <option value="change">Change</option>
+														  <option value="change_percent">Change percent</option>
+														  <option value="volume">Volume</option>
+														</select>
+												</div>
+												<div class="col-sm-4 col-xs-12">
+														<label class="control-label" style="text-align: left">Order </label>
+														<select class="selectpicker show-tick" ng-model="order_data" id="order">
+														  <option value="">Ascending</option>
+														  <option value="true">Descending</option>
+														</select>
+												</div>	
+												<div class="col-sm-4 col-xs-0"></div>
+										<br><br>
+											<div>
+												<div ng-init="display_favorite()">
+													<table class="table table-striped">
+														<thead>
+													      <tr>
+													        <th>Symbol</th>
+													        <th>Stock Price</th>
+													        <th>Change(Change Percent)</th>
+													        <th>Volume</th>
+													        <th></th>
+													      </tr>
+													    </thead>
+													    <tbody>
+													    	<tr ng-repeat="x in favorite_list | orderBy: ListBy : order_data">
+													    		<td ng-click="stock_form.item=x.symbol;fetchFromFav(x.symbol)"><a>{{x.symbol}}</a></td>
+								                				<td>{{x.price}}</td>
+								                				<td style="color: {{x.color}}">{{x.change}}({{x.change_percent}}%)<img src={{x.img_src}} width='20' height='20'></td>
+								                				<td>{{x.volume | number }}</td>
+								                				<td ng-click="delete_symbol(x.symbol)"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button></td>
+													    	</tr>
+													    </tbody>
+													</table>					
+												</div>
+											</div>
+									</div>
+							</div>	
+					</div>		
+					<div id="cont1" class="container animate-hidden_new" ng-animate="'animate'" ng-hide="checked_con2" style="padding-left: 0px;padding-right: 30px;">
+						<div class="jumbotron" style="background-color: white;padding-top: 20px;padding-left: 20px;padding-bottom: 35px;padding-right: 20px">
+							<div class="well well-sm" style="margin-bottom: 0">
+								<div class="row">
+									<div class="col-sm-1" style="text-align: left">
+										<button type="button" class="btn" id="item2" ng-click="go_to_tab1()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+									</div>	
+									<div class="col-sm-10" style="text-align: center">Stock Details</div>
+									<div class="col-sm-1" style="text-align: left"></div>
+								</div>
+							</div>
+							<div class="row" style="border: 1px solid lightgrey;margin: 0px">
+								<div class="container">
+										<div class="page-header" id="big">
+							  				<ul class="nav nav-pills">
+							    				<li class="active" id="id1"><a data-toggle="tab" href="#stockDetails">
+							    				<span class="glyphicon glyphicon-dashboard"></span>  Current Stocks</a></li>
+							    				<li id="id2"><a data-toggle="tab" href="#historicalCharts" ng-click="getHistoricalData()"><span class="glyphicon glyphicon-stats"></span>  Historical Charts</a></li>
+							    				<li id="id3"><a data-toggle="tab" href="#newsFeed">
+							    				<span class="glyphicon glyphicon-link"></span>  News Feeds</a></li>
+							  				</ul>
+							  			</div>
+							  			<div id="small">
+							  				<div class="row">
+								  				<div class="col-sm-6">
+									  				<ul class="nav nav-pills">
+										    				<li class="active" id="id1" style="display: inline;"><a data-toggle="tab" href="#stockDetails">
+										    				<span class="glyphicon glyphicon-dashboard"></span> Stocks</a></li>
+										    				<li id="id2" style="display: inline;"><a data-toggle="tab" href="#historicalCharts"><span class="glyphicon glyphicon-stats"></span> Charts</a></li>
+										    				<li id="id3" style="display: inline;"><a data-toggle="tab" href="#newsFeed">
+										    				<span class="glyphicon glyphicon-link"></span> News</a></li>
+									  				</ul>
+									  			</div>
+									  		</div>	
+								  			</div>		
+						  			<div class="tab-content">
+
+						  				<div id="stockDetails" class="tab-pane fade in active">
+						  					<div class="row">
+												<div class="col-sm-6" id="stock_table_data">
+													<div class="panel-body">
+														<div class="row">
+															<div class="col-sm-5 col-xs-6" style="text-align: left">Stock Details</div>
+															<div class="col-sm-3 col-xs-0"></div>
+															<div class="col-sm-2 col-xs-2">
+																<button type="button" class="btn btn-default" id="star_btn" ng-click="store()">
+					      											<span class="glyphicon glyphicon-star" id="star" style="padding:0px"></span>
+					    										</button>
+															</div>
+															<div class="col-sm-2 col-xs-2">
+																<button type="button" class="btn btn-default" ng-click="fb_display()" id="fb_btn">
+																	<img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png" width="23" height="23">
+																</button>
+															</div>
+															<div class="col-sm-0 col-xs-2"></div>
+														</div>
+													</div>
+													<div id="progressINDEX" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  									</div>
+													<div class="panel-body" id="stock_table">
+															<table class="table table-striped">
+									  						<tr>
+									                            <td>Stock Ticker symbol</td>
+									    						<td ng-bind="ticker"></td>
+									  						</tr>
+									  						<tr>
+									                            <td>Last Price</td>
+									    						<td>{{ previous_close| number:2 }}</td>
+									  						</tr>
+									  						<tr>
+									                            <td>Change (Change Percent)</td>
+									    						<td style="color: {{color}}">{{change| number:2}} ({{change_percent| number:2}}%)<img src={{img_src}} width='20' height='20'></td>
+									  						</tr>
+									  						<tr>
+									                            <td>Timestamp</td>
+									    						<td>{{ Timestamp }}</td>
+									  						</tr>
+									  						<tr>
+									                            <td>Open</td>
+									    						<td>{{ open| number:2 }}</td>
+									  						</tr>
+									  						<tr>
+									                            <td>Close</td>
+									    						<td>{{ previous_close_val| number:2 }}</td>
+									  						</tr>
+									  						<tr>
+									                            <td>Day's Range</td>
+									    						<td>{{ low| number:2 }}-{{high| number:2}}</td>
+									  						</tr>
+									  						<tr>
+									                            <td>Volume</td>
+									    						<td>{{ volume | number }}</td>
+									  						</tr>
+
+														</table>
+													</div>
+													<div class="warningPriceTable"></div>
+												</div>
+												<div class="col-sm-6">
+													<div class="container">
+									  					<ul class="nav nav-tabs" onload="call_price_chart()" nd-model="active_tab">
+									   							<li id="PRICE" class="active" ng-click="set_tab('PRICE')"><a data-toggle="tab" href="#price">Price</a></li>
+									    						<li id="SMA" ng-click="set_tab('SMA')"><a data-toggle="tab" href="#sma">SMA</a></li>
+									    						<li id="EMA" ng-click="set_tab('EMA')"><a data-toggle="tab" href="#ema">EMA</a></li>
+									    						<li id="STOCH" ng-click="set_tab('STOCH')"><a data-toggle="tab" href="#stoch">STOCH</a></li>
+									    						<li id="RSI" ng-click="set_tab('RSI')"><a data-toggle="tab" href="#rsi">RSI</a></li>
+									    						<li id="ADX" ng-click="set_tab('ADX')"><a data-toggle="tab" href="#adx">ADX</a></li>
+									    						<li id="CCI" ng-click="set_tab('CCI')"><a data-toggle="tab" href="#cci">CCI</a></li>
+									    						<li id="BBANDS" ng-click="set_tab('BBANDS')"><a data-toggle="tab" href="#bbands">BBANDS</a></li>
+									    						<li id="MACD" ng-click="set_tab('MACD')"><a data-toggle="tab" href="#macd">MACD</a></li>
+									  					</ul>
+
+									  					<div class="tab-content">
+									    					<div id="price" class="tab-pane fade in active">
+									    						<div id="progressPRICE" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									    						<div id="containerPRICE"></div>
+									    						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="sma" class="tab-pane fade">
+									    						<div id="progressSMA" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									    						<div id="containerSMA"></div>
+									    						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="ema" class="tab-pane fade">
+									    						<div id="progressEMA" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerEMA"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="stoch" class="tab-pane fade">
+									    						<div id="progressSTOCH" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerSTOCH"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="rsi" class="tab-pane fade">
+									    						<div id="progressRSI" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerRSI"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="adx" class="tab-pane fade">
+									    						<div id="progressADX" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerADX"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="cci" class="tab-pane fade">
+									    						<div id="progressCCI" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerCCI"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="bbands" class="tab-pane fade">
+									    						<div id="progressBBANDS" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerBBANDS"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+									    					<div id="macd" class="tab-pane fade">
+									    						<div id="progressMACD" class="progress">
+				    												<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    												</div>
+				  												</div>
+									      						<div id="containerMACD"></div>
+									      						<div class="warningIndicators"></div>
+									    					</div>
+					  									</div>
+
+													</div>
+												</div>
+											</div>
+										</div>
+
+						  			 	<div id="historicalCharts" class="tab-pane fade">				      
+									      	<div id="highstock_container"></div>
+									      	<div class="warningHistorical"></div>
+									      	<div id="progressHISTORY" class="progress">
+				    							<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    							</div>
+				  							</div>
+									    </div>
+
+									    <div id="newsFeed" class="tab-pane fade">
+									      <div class="directive"></div>
+									      <div class="warningRSS"></div>
+									      <div id="progressRSS" class="progress">
+				    						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+				    						</div>
+				  						  </div>
+									    </div>
+						  			</div>
+					  				
+								</div>
+							</div>
+						</div>
+					</div>	
+	</div>	
+</div>	
+</body>
+</html>
