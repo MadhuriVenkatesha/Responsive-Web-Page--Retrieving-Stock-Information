@@ -38,7 +38,7 @@ var request = require('request-promise');
 
 app.get('/index', function (req, res) {
    //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
-   var API_KEY="QOBQ26JRIG4OOLKH";
+   var API_KEY="YOUR_API_KEY";
    console.log("in here" + req.query.stockSymbol);
    var symbol=req.query.stockSymbol;
    var URL= "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+symbol+"&outputsize=full&apikey="+API_KEY;
@@ -50,7 +50,7 @@ app.get('/index', function (req, res) {
 })
 app.get('/dummy', function (req, res) {
    //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
-   var API_KEY="QOBQ26JRIG4OOLKH";
+   var API_KEY="YOUR_API_KEY";
    console.log("in here" + req.query.stockSymbol);
    var symbol=req.query.stockSymbol;
    var indicator=req.query.indicator;
@@ -76,7 +76,7 @@ app.get('/dummy', function (req, res) {
 })
 app.post('/newsFeed', function (req, res) {
    //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
-   var API_KEY="QOBQ26JRIG4OOLKH";
+   var API_KEY="YOUR_API_KEY";
    console.log(req.body.stockSymbol);
    var symbol=req.body.stockSymbol;
    console.log("in here");
