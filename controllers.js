@@ -1,5 +1,3 @@
-//var app = angular.modulestockTable", []);
-//app.controller('stockTableController', function($scope){});
 var table_data="";
 var selected_tab;
 var fb_symbols={};
@@ -18,24 +16,32 @@ app.directive("directive", function() {
         template : "<div class='well' ng-repeat='x in RSSinfo'><a target='_blank' href={{x.link}}>{{x.title}}</a><br><br>Author:{{x.author}}<br><br>Date:{{x.pubDate}}</div>"
     };
 });
+
+//Directive to display warning message - Price Table
 app.directive("warningPriceTable",function(){
 	return{
 		restrict : "C",
 		template :'<div class="alert alert-danger">Error!</strong>Could not fetch tabular data</div>'
 	}
 });
+
+//Directive to display warning message - Historical Table
 app.directive("warningHistorical",function(){
 	return{
 		restrict : "C",
 		template :'<div class="alert alert-danger"> <strong>Error!</strong>Could not historical data</div>'
 	}
 });
+
+//Directive to display warning message - RSS News Feed
 app.directive("warningRSS",function(){
 	return{
 		restrict : "C",
 		template :'<div class="alert alert-danger"> <strong>Error!</strong>Could not fetcg RSS data</div>'
 	}
 });
+
+//Directive to display warning message - Stock Indicators Data
 app.directive("warningIndicators",function(){
 	return{
 		restrict : "C",
@@ -47,15 +53,20 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 			var highstock_datePrice=[];
 			var my_symbols=[];
 			var refresh;
+			
+			// To enable stocks table display 
 			$scope.go_to_tab2=function(){
 				$scope.checked_con1=true;
 				$scope.checked_con2=false;
 			}
+	
+			// To enable favorite table display 
 			$scope.go_to_tab1=function(){
 				$scope.checked_con1=false;
 				$scope.checked_con2=true;
 			}
-
+	
+			// Autocomplete search input processing
 			$scope.key_up=function(text){
 				console.log($scope.stock_form.selectedItem);
 				if($scope.stock_form.mandatoryInput.$touched && $scope.stock_form.mandatoryInput.$invalid){
@@ -68,6 +79,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 					document.getElementById("submit_btn").disabled=false;	
 				}
 			}
+	
+			// Querying stock symbol
 			$scope.query=function(searchText){
 				console.log(searchText);
     			return $http({
@@ -88,6 +101,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 				$scope.table_controller(symbol);
 				$scope.stock_form.item=symbol;
 			}
+	
+			// Setting the directives accordingly
 			$scope.setWarnings=function(indicators){
 					$('.directive','#newsFeed').hide();
 					$('.warningRSS','#newsFeed').hide();
@@ -115,6 +130,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 					 $scope.checked_con1=true;
 					 $scope.checked_con2=false;		
 			}
+			
+			//Resetting the Search form
 			$scope.clear=function(){
 				document.getElementById("stock_form").reset();
 				//localStorage.removeItem("favoriteData");
@@ -126,8 +143,6 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 				if((stock_form.mandatoryInput.$touched && stock_form.mandatoryInput.$error)==true){
 					stock_form.mandatoryInput.$touched=false
 				}			
-			 	//$("#myCarousel").carousel(0);
-			 	//$scope.go_to_tab1();
 			}
 			$scope.set_tab=function(tab){
 				selected_tab=tab;
@@ -142,6 +157,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 
 				document.getElementById("fb_btn").disabled = val;
 			}
+	
+			// Enabling interface to post details on facebook
 			$scope.fb_display=function(){
 				window.fbAsyncInit = function() {
 				    FB.init({
@@ -200,6 +217,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 				$scope.right_tab=true;
 				$scope.left_tab=false;	
 			}
+	
+			// Enabling refresh of favorite stocks data
 			$scope.simpleRefresh=function(){
 				var symbol;
 				for(symbol in my_symbols){
@@ -294,6 +313,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 				}
 				$("#order").selectpicker('refresh');
 			}
+			
+			// Ordering the data displayed in the favorite table
 			$scope.adjust=function(){
 				if(order_data=="asc"){
 					$scope.order_values=false;
@@ -302,6 +323,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 					$scope.order_values=true;
 				}
 			}
+			
+			// deleting the symbols from favorite table
 			$scope.delete_symbol= function(symbol){
 				if(localStorage.favoriteData){
 					var output=JSON.parse(localStorage.getItem("favoriteData"));
@@ -319,6 +342,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 					$scope.favorite_list.splice(i,1);
 				}
 			}
+	
+			// Changing the dispaly for different screen sizes
 			$(window).on('resize',function(){
 				var winWidth =  $(window).width();
 				if(winWidth <= 1199){
@@ -348,6 +373,7 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
                		selectedIndex: 0
             	};
 				$scope.favorite_list=[];
+				// Fetching favorite data from local storage
 				if(localStorage.favoriteData){
 					var src;
 					var color;
@@ -371,7 +397,8 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 						}
 				}
 			}
-
+			
+			//Fetching the stocks data and displaying it in tables and charts using HighCharts and HighStock graphics
 			$scope.table_controller=function(param){
 				if(selected_tab==undefined){
 				selected_tab="PRICE";
@@ -411,8 +438,6 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 				}
 				else{
 				pay_load=param;
-				//$scope.stock_form.mditem-text=param;//*****************
-				//console.log($scope)
 				}
 				//window.alert(param);
         		var payload={stockSymbol : pay_load};
@@ -429,9 +454,6 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
     			method: "GET",
     			timeout: 20000,
     			params: payload}).then(function(response){
-    				//var child=document.getElementById('historicalCharts').getElementsByTagName("div");
-			    	//child[0].style.display='';
-			    	//child[1].style.display='none'
                 	var result= response.data;
                 	if(Object.keys(result).length==0 || Object.keys(result).includes("Error Message")){
                 		$('#progressINDEX').hide();
@@ -509,7 +531,7 @@ app.controller('stockTableController', function($scope, $rootScope,$http){
 			 })
 
     		}	
-
+			//Fetch historical stock data and display it using HighStocks graphics
 			$scope.getHistoricalData=function(){
 				//document.getElementById('progressHISTORY').style.display='none';
 				console.log(highstock_datePrice);
@@ -1084,5 +1106,4 @@ $scope.AJAXcall=function(URL,post_payload,call_back){
 
 	});
 //Controller Ends Here	 
-
-//window.alert($("#toggle_btn").is(':checked'));			
+			
