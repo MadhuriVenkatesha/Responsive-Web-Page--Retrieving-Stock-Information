@@ -2,8 +2,6 @@ var express = require('express');
 var bodyParser= require("body-parser");
 var app = express();
 var url = require('url');
-//var url_parts = url.parse(request.url, true);
-//var query = url_parts.query;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var router = express.Router();
@@ -12,19 +10,17 @@ app.get('/auto', function (req, res) {
   var URL="http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input="+searchText;
   request(URL, function (error, response, body) {
    if (!error && response.statusCode == 200) {
-       res.send(body); // Print the google web page.
+       res.send(body); 
     }
 });
 })
-// app.get('/moment.js', function (req, res) {
-//    res.sendFile( __dirname + "/node_modules/moment/" + "moment.js" );
-// })
-// app.get('/moment-tz.js', function (req, res) {
-//    res.sendFile( __dirname + "/node_modules/moment-timezone/" + "moment-timezone.js" );
-// })
+
+//Serves the starting page of the application which is stock_carousal.html
 app.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "stock_carousal.html" );
 })
+
+//Serves the controller file for the application which is controllers.js
 app.get('/controllers.js', function (req, res) {
    res.sendFile( __dirname + "/" + "controllers.js" );
 })
@@ -36,26 +32,26 @@ app.get('/style.css', function (req, res) {
 })
 var request = require('request-promise');
 
+//Fetches the intial stock details for the stock table
 app.get('/index', function (req, res) {
-   //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
    var API_KEY="YOUR_API_KEY";
    console.log("in here" + req.query.stockSymbol);
    var symbol=req.query.stockSymbol;
    var URL= "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+symbol+"&outputsize=full&apikey="+API_KEY;
    request(URL, function (error, response, body) {
    if (!error && response.statusCode == 200) {
-    	 res.send(body); // Print the google web page.
+    	 res.send(body); 
   	}
 });
 })
+
+//To fetch all the indicator data
 app.get('/dummy', function (req, res) {
-   //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
    var API_KEY="YOUR_API_KEY";
    console.log("in here" + req.query.stockSymbol);
    var symbol=req.query.stockSymbol;
    var indicator=req.query.indicator;
    var URL;
-   //var URL= "http://localhost:8080/"+ indicator;
    if(indicator=="BBANDS"){
     URL="https://www.alphavantage.co/query?function=BBANDS"+"&symbol="+symbol+"&interval=daily&time_period=5&series_type=close&nbdevup=3&nbdevdn=3&apikey="+API_KEY;
    }
@@ -70,13 +66,14 @@ app.get('/dummy', function (req, res) {
    }
    request(URL, function (error, response, body) {
    if (!error && response.statusCode == 200) {
-    	 res.send(body); // Print the google web page.
+    	 res.send(body); 
   	}
 });
 })
+
+//Fetch the news feed data
 app.post('/newsFeed', function (req, res) {
-   //var URL1='https://www.alphavantage.co/query?function=symbol=aapl&interval=daily&time_period=10&series_type=open&apikey=QOBQ26JRIG4OOLKH';
-   var API_KEY="YOUR_API_KEY";
+    var API_KEY="YOUR_API_KEY";
    console.log(req.body.stockSymbol);
    var symbol=req.body.stockSymbol;
    console.log("in here");
@@ -92,8 +89,10 @@ app.post('/newsFeed', function (req, res) {
   	}
 });
 })
+
+//Starting the server
 var server = app.listen(process.env.PORT || 8081, function () {
    var host = server.address().address
    var port = server.address().port
-   console.log("Example app listening at http://%s:%s", host, port)
+   console.log("Server listening at http://%s:%s", host, port)
 })
