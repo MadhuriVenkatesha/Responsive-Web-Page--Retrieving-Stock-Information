@@ -87,12 +87,10 @@
 			<div class="jumbotron" style="padding-left: 20px;background-color: white;padding-top: 35px">
 				<h4 style="text-align: center;"><b/>Stock Market Search</h4>
 				<form class="form-horizontal" id="stock_form" name="stock_form">
-					<!--<div class="form-group">-->
+					
 					<div class="row">
 			  			<label class="control-label col-sm-3" style="text-align: left" for="symbol">Enter stock ticker symbol:<span style="color: red">*</span></label>
-			  			<!--<div class="col-sm-6">
-			    			<input type="text" class="form-control" id="stockSymbol" placeholder="e.g.AAPL" name="stockSymbol" ng-model="symbol">
-			  			</div>-->
+			  			
 						
 						<!-- Implementing AutoComplete -->
 			  			<div class="col-sm-6" ng-cloak>
@@ -105,8 +103,7 @@
 
 						               </md-item-template>
 						               <md-not-found>No matches found</md-not-found>
-						              <!-- <ng-messages for="stock_form.name.$error">
-	        							<ng-message when="required">Too small!</ng-message>-->
+						             
 						        </md-autocomplete>         
 						        <br>
 						         <div ng-messages="stock_form.mandatoryInput.$touched && stock_form.mandatoryInput.$error" class="md-block">
@@ -118,7 +115,7 @@
 			  				<button type="button" class="btn btn-default" ng-click="clear()"> <span class="glyphicon glyphicon-refresh"></span> Clear</button>
 			  			</div>
 			  		</div>	
-					<!--</div>-->
+	
 				</form>
 			</div>
 		</div>
