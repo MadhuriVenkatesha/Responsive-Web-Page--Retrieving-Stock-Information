@@ -81,6 +81,7 @@
 </head>
 <body ng-app="stockTable" ng-controller="stockTableController" style='background-image:url("http://cs-server.usc.edu:45678/hw/hw8/images/background.png");'>
 <div class="container" style='background-image:url("http://cs-server.usc.edu:45678/hw/hw8/images/background.png");'>
+	<!-- Stock Search Form -->
 	<div class="container page-header" style="padding-top: 15px; margin-top:0px">
 		<div>
 			<div class="jumbotron" style="padding-left: 20px;background-color: white;padding-top: 35px">
@@ -92,6 +93,8 @@
 			  			<!--<div class="col-sm-6">
 			    			<input type="text" class="form-control" id="stockSymbol" placeholder="e.g.AAPL" name="stockSymbol" ng-model="symbol">
 			  			</div>-->
+						
+						<!-- Implementing AutoComplete -->
 			  			<div class="col-sm-6" ng-cloak>
 					           <md-autocomplete flex required md-input-name="mandatoryInput" name="mandatoryInput" ng-model="mydata"
 						            md-selected-item="selectedItem" md-search-text="searchText" md-items="item in query(searchText)"
@@ -121,6 +124,7 @@
 		</div>
 	</div>
 	<div class="container">
+		<!--- Implementing Favorite List -->
 					<div id="cont1" class="container animate-hidden" ng-animate="'animate'" ng-hide="checked_con1" style="padding-left: 0px;padding-right: 30px;">
 							<div class="jumbotron" style="background-color: white;padding-top: 20px;padding-left: 20px;padding-bottom: 35px;padding-right: 20px;">
 									<div class="well well-sm" style="margin-bottom: 0">
@@ -212,6 +216,7 @@
 							  				<div class="row">
 								  				<div class="col-sm-6">
 									  				<ul class="nav nav-pills">
+														<!-- Implementing 3 tabs stock table,historical charts and news feed -->
 										    				<li class="active" id="id1" style="display: inline;"><a data-toggle="tab" href="#stockDetails">
 										    				<span class="glyphicon glyphicon-dashboard"></span> Stocks</a></li>
 										    				<li id="id2" style="display: inline;"><a data-toggle="tab" href="#historicalCharts"><span class="glyphicon glyphicon-stats"></span> Charts</a></li>
@@ -226,6 +231,7 @@
 						  				<div id="stockDetails" class="tab-pane fade in active">
 						  					<div class="row">
 												<div class="col-sm-6" id="stock_table_data">
+													<!-- Implementing stock table -->
 													<div class="panel-body">
 														<div class="row">
 															<div class="col-sm-5 col-xs-6" style="text-align: left">Stock Details</div>
@@ -287,6 +293,7 @@
 													<div class="warningPriceTable"></div>
 												</div>
 												<div class="col-sm-6">
+													<!-- High charts implementation of the stock data-->
 													<div class="container">
 									  					<ul class="nav nav-tabs" onload="call_price_chart()" nd-model="active_tab">
 									   							<li id="PRICE" class="active" ng-click="set_tab('PRICE')"><a data-toggle="tab" href="#price">Price</a></li>
@@ -379,7 +386,7 @@
 												</div>
 											</div>
 										</div>
-
+										<!-- Implementing Historical charts-->														
 						  			 	<div id="historicalCharts" class="tab-pane fade">				      
 									      	<div id="highstock_container"></div>
 									      	<div class="warningHistorical"></div>
@@ -388,7 +395,7 @@
 				    							</div>
 				  							</div>
 									    </div>
-
+									    <!-- NEWS Feed implementation-->
 									    <div id="newsFeed" class="tab-pane fade">
 									      <div class="directive"></div>
 									      <div class="warningRSS"></div>
